@@ -1,43 +1,78 @@
 
-from flask import Flask, render_template, request, json
+from flask import Flask, request, session, g, redirect, url_for, abort, \
+     render_template, flash, _app_ctx_stack
+from sqlite3 import dbapi2 as sqlite3
+import pandas
+import json
+
+
+# configuration
+DATABASE = 'db/Basketball.db'
+DEBUG = True
+SECRET_KEY = 'development key'
+USERNAME = 'admin'
+PASSWORD = 'default'
+
+
+# create our little application :)
+app = Flask(__name__)
+app.config.from_object(__name__)
+app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+
+
+def init_db():
+    """Creates the database tables."""
+    with app.app_context():
+        db = get_db()
+        db.commit()
+
+
+def get_db():
+    """Opens a new database connection if there is none yet for the
+    current application context.
+    """
+    top = _app_ctx_stack.top
+    if not hasattr(top, 'db/Basketball.db'):
+        sqlite_db = sqlite3.connect(app.config['DATABASE'])
+        sqlite_db.row_factory = sqlite3.Row
+        top.sqlite_db = sqlite_db
+
+    return top.sqlite_db
+
+@app.teardown_appcontext
+def close_db_connection(exception):
+    """Closes the database again at the end of the request."""
+    top = _app_ctx_stack.top
+    if hasattr(top, 'db/Basketball.db'):
+        top.sqlite_db.close()
 
 
 
-app=Flask(__name__)
+#sql="SELECT Player, count(case Result when 'Winner' then 1 else null end) as Wins, count(case Result when 'Loser' then 1 else null end) as Losses, count(*) as Games, round(count(case Result when 'Winner' then 1 else null end)*1.00/count(*)*1.00, 5) as Pct FROM Stats WHERE Date between '4/1/2016' and '7/12/2016' group by 1 having count(*)> 75 order by 5 desc"
 
-@app.route("/")
-def main():
-    return render_template('index.html')
-    
+@app.route('/')
+def show_entries():
+    db = get_db()
+    cur = db.execute('SELECT UPPER(Player) as Player, count(case Result when "Winner" then 1 else null end) as Wins, count(case Result when "Loser" then 1 else null end) as Losses, count(*) as Games, round(count(case Result when "Winner" then 1 else null end)*1.00/count(*)*1.00, 5) as Pct FROM Stats WHERE Date >= "4/1/2016" group by 1 having count(*)> 75 order by 5 desc')
+    entries = cur.fetchall()
+    return render_template('index.html', entries=entries)
 
-@app.route('/showSignUp') 
-def showSignUp(): 
-   return render_template('signup.html')
- 
-    
-@app.route('/signUp') 
-def signUp(): 
-    #read posted values from UI
-    _name=request.form['inputName'] 
-    _email=request.form['inputEmail']
-    _password=request.form['inputPassword']
-    
-    #validate
-    if _name and _email and _password:
-        return json.dumps({'html':'<span>All fields good !!</span>'})
-    else:
-        return json.dumps({'html':'<span>Enter the required fields</span>'})
-
-
+print show_entries
       
     
 @app.route('/showHome') 
 def showHome(): 
-    return render_template('index.html')     
-    
+    return render_template('index.html')
     
 
-if __name__=="__main__":
-      app.run()
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    flash('You were logged out')
+    return redirect(url_for('index'))
 
+
+if __name__ == '__main__':
+    # init_db()
+    app.run()
 
