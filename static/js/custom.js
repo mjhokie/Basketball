@@ -87,7 +87,7 @@ $(function(){
     });
 
 
-  // NIVO LIGHTBOX
+  //--- NIVO LIGHTBOX
   $('.iso-box-section a').nivoLightbox({
         effect: 'fadeScale',
     });

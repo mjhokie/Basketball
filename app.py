@@ -53,17 +53,23 @@ def close_db_connection(exception):
 @app.route('/')
 def show_entries():
     db = get_db()
-    cur = db.execute('SELECT UPPER(Player) as Player, count(case Result when "Winner" then 1 else null end) as Wins, count(case Result when "Loser" then 1 else null end) as Losses, count(*) as Games, round(count(case Result when "Winner" then 1 else null end)*1.00/count(*)*1.00, 5) as Pct FROM Stats WHERE Date >= "4/1/2016" group by 1 having count(*)> 75 order by 5 desc')
+    cur = db.execute('SELECT UPPER(Player) as Player, count(case Result when "Winner" then 1 else null end) as Wins, count(case Result when "Loser" then 1 else null end) as Losses, count(*) as Games, round(count(case Result when "Winner" then 1 else null end)*1.00/count(*)*1.00, 5) as Pct FROM Stats WHERE Date >= "4/1/2016" group by 1 having count(*)> 100 order by 5 desc')
     entries = cur.fetchall()
     return render_template('index.html', entries=entries)
 
-print show_entries
-      
-    
 @app.route('/showHome') 
 def showHome(): 
     return render_template('index.html')
     
+@app.route('/api/showstats', methods=['GET', 'POST'])
+def showstats():
+   # get_data=json.loads(request.data)
+    #print get_data
+
+    #games=str(get_data['games'])
+   return render_template('stats.html')
+
+
 
 @app.route('/logout')
 def logout():
@@ -73,6 +79,6 @@ def logout():
 
 
 if __name__ == '__main__':
-    # init_db()
+    init_db()
     app.run()
 

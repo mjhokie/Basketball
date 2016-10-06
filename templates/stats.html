@@ -156,19 +156,21 @@ th {
 			<th>Games</th>
 			<th>Winning Pct</th></tr>
 
-        <form action="{{ url_for('show_entries') }}" method=post class=show_entries>
+		<form action="{{ url_for('show_entries') }}" method=post class=show_entries>
       <dl>
 
           <div class="form-group">
               <div id="reportrange" class="pull-right" style="background: #fff;  padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-    			<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
-    				<span></span> <b class="caret"></b>
-			  </div>
+    <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+    <span></span> <b class="caret"></b>
+</div>
+		<!--  <label>  DATE RANGE: </label> <input id="datepicker" name="date"/>-->
+          <label>  MIN GAMES PLAYED </label><input type=integer size=6 name=games value.bind="games" placeholder="e.g. 100" style="background: #fff;  margin-top: 20px; margin-left: 10px; padding: 5px 10px; border: 1px solid #ccc; "></label>
 
-         			 <label>  MIN GAMES PLAYED </label><input type=integer size=6 name=games value.bind="games" placeholder="e.g. 100" style="background: #fff;  margin-top: 20px; margin-left: 10px; padding: 5px 10px; border: 1px solid #ccc; "></label>
-           			 <p>&nbsp;</p>
-       				 <dd><input type=submit submit.delegate="showstats(games)" method=post value='Run the Numbers'>
-		  </div>
+       <!-- <dd><input type=integer size=3 name=game>-->
+            <p>&nbsp;</p>
+        <dd><input type=submit submit.delegate="showstats(games)" method=post value='Run the Numbers'>
+          </div>
       </dl>
     </form>
 		{% for entry in entries %}
