@@ -1,10 +1,8 @@
-
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-     render_template, flash, _app_ctx_stack
+    render_template, flash, _app_ctx_stack
 from sqlite3 import dbapi2 as sqlite3
 import pandas
 import json
-
 
 # configuration
 DATABASE = 'db/Basketball.db'
@@ -13,11 +11,17 @@ SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = 'default'
 
-
 # create our little application :)
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+
+def dict_factory(cursor, row):
+        d={}
+        for idx, col in enumerate(cursor.description):
+            d[col[0]]=row(idx)
+        return d
+
 
 
 def init_db():
@@ -28,8 +32,10 @@ def init_db():
 
 
 def get_db():
+    # type: () -> object
     """Opens a new database connection if there is none yet for the
     current application context.
+    :rtype: object
     """
     top = _app_ctx_stack.top
     if not hasattr(top, 'db/Basketball.db'):
@@ -39,6 +45,7 @@ def get_db():
 
     return top.sqlite_db
 
+
 @app.teardown_appcontext
 def close_db_connection(exception):
     """Closes the database again at the end of the request."""
@@ -47,29 +54,46 @@ def close_db_connection(exception):
         top.sqlite_db.close()
 
 
-
-#sql="SELECT Player, count(case Result when 'Winner' then 1 else null end) as Wins, count(case Result when 'Loser' then 1 else null end) as Losses, count(*) as Games, round(count(case Result when 'Winner' then 1 else null end)*1.00/count(*)*1.00, 5) as Pct FROM Stats WHERE Date between '4/1/2016' and '7/12/2016' group by 1 having count(*)> 75 order by 5 desc"
+# sql="SELECT Player, count(case Result when 'Winner' then 1 else null end) as Wins, count(case Result when 'Loser' then 1 else null end) as Losses, count(*) as Games, round(count(case Result when 'Winner' then 1 else null end)*1.00/count(*)*1.00, 5) as Pct FROM Stats WHERE Date between '4/1/2016' and '7/12/2016' group by 1 having count(*)> 75 order by 5 desc"
 
 @app.route('/')
 def show_entries():
     db = get_db()
-    cur = db.execute('SELECT UPPER(Player) as Player, count(case Result when "Winner" then 1 else null end) as Wins, count(case Result when "Loser" then 1 else null end) as Losses, count(*) as Games, round(count(case Result when "Winner" then 1 else null end)*1.00/count(*)*1.00, 5) as Pct FROM Stats WHERE Date >= "4/1/2016" group by 1 having count(*)> 100 order by 5 desc')
+    cur = db.execute(
+       'SELECT UPPER(Player) as Player, count(case Result when "Winner" then 1 else null end) as Wins, count(case Result when "Loser" then 1 else null end) as Losses, count(*) as Games, round(count(case Result when "Winner" then 1 else null end)*1.00/count(*)*1.00, 5) as Pct FROM Stats WHERE Date >= "1/1/2016" group by 1 having count(*)> 100 order by 5 desc')
     entries = cur.fetchall()
     return render_template('index.html', entries=entries)
 
-@app.route('/showHome') 
-def showHome(): 
+
+  #  return render_template('index.html')
+
+
+@app.route('/showHome')
+def showHome():
     return render_template('index.html')
-    
-@app.route('/api/showstats', methods=['GET', 'POST'])
-def showstats():
-   # get_data=json.loads(request.data)
-    #print get_data
-
-    #games=str(get_data['games'])
-   return render_template('stats.html')
 
 
+@app.route('/stats_req', methods=['POST'])
+def stats_req():
+
+    start_date, end_date, games = (request.form["start_date"]), (request.form["end_date"]), int(request.form["games"])
+    print start_date
+    print end_date
+    print games
+    sql='''Select * from (SELECT UPPER(Player) as Player,
+     count(case Result when 'Winner' then 1 else null end) as Wins,
+     count(case Result when 'Loser' then 1 else null end) as Losses,
+     count(*) as Games,
+     round(count(case Result when 'Winner' then 1 else null end)*1.00/count(*)*1.00, 5) as Pct
+    FROM Stats
+    WHERE Date between ? and ?
+    group by 1)
+    where Games >= ? order by 5 desc'''
+    db=get_db()
+    cur=db.execute (sql, [start_date, end_date, games])
+
+    entries=cur.fetchall()
+    return render_template('index.html', scroll='something', entries=entries)
 
 @app.route('/logout')
 def logout():
@@ -81,4 +105,3 @@ def logout():
 if __name__ == '__main__':
     init_db()
     app.run()
-
