@@ -70,7 +70,7 @@ th {
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="#home" class="smoothScroll">Home</a></li>
-				<li><a href="#about" class="smoothScroll">Sign In</a></li>
+			<!--	<li><a href="#about" class="smoothScroll">Sign In</a></li>-->
 				<li><a href="#work" class="smoothScroll">Player Stats</a></li>
 			</ul>
 		</div>
@@ -96,7 +96,7 @@ th {
 
 
 
-    <!-- sign in section -->     
+    <!-- sign in section
 <section id="about">
 	<div class="container">
 		<div class="row">
@@ -128,7 +128,7 @@ th {
 		</div>
 	</div>
 </section>        
-
+-->
 
  
     <!-- sign up section-->
@@ -168,11 +168,11 @@ th {
 			  </div>-->
 
          			 <label>  START DATE</label>
-			  		<input type="date" size=10 name="start_date" value="{{ request.form['start_date'] }}" placeholder="m/d/yyyy" style="background: #fff;  margin-top: 20px; margin-left: 10px; padding: 5px 10px; border: 1px solid #ccc; "></label>
+			  		<input type="date" size=10 name="start_date" value="{{ request.form['start_date'] }}" placeholder="yyyy-mm-dd" style="background: #fff;  margin-top: 20px; margin-left: 10px; padding: 5px 10px; border: 1px solid #ccc; "></label>
 
 
          			 <label>  END DATE </label>
-			  		<input type="date" size=10 name="end_date" value="{{ request.form['end_date'] }}" placeholder="m/d/yyyy" style="background: #fff;  margin-top: 20px; margin-left: 10px; padding: 5px 10px; border: 1px solid #ccc; "></label>
+			  		<input type="date" size=10 name="end_date" value="{{ request.form['end_date'] }}" placeholder="yyyy-mm-dd" style="background: #fff;  margin-top: 20px; margin-left: 10px; padding: 5px 10px; border: 1px solid #ccc; "></label>
 				<p>&nbsp;</p>
          			 <label>  MIN GAMES PLAYED </label>
 			  		<input type="integer" size=6 name="games" value="{{ request.form['games'] }}" placeholder="e.g. 100" style="background: #fff;  margin-top: 20px; margin-left: 10px; padding: 5px 10px; border: 1px solid #ccc; "></label>
@@ -198,7 +198,7 @@ th {
 
 </section>        
 
-<div id="something">
+<div id="output">
 {% if scroll %}
 <script>
     document.getElementById('{{ scroll }}').scrollIntoView();

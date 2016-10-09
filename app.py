@@ -6,6 +6,7 @@ import json
 
 # configuration
 DATABASE = 'db/Basketball.db'
+#DATABASE = '/home/mjhokie/Basketball/db/Basketball.db'
 DEBUG = True
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
@@ -60,7 +61,8 @@ def close_db_connection(exception):
 def show_entries():
     db = get_db()
     cur = db.execute(
-       'SELECT UPPER(Player) as Player, count(case Result when "Winner" then 1 else null end) as Wins, count(case Result when "Loser" then 1 else null end) as Losses, count(*) as Games, round(count(case Result when "Winner" then 1 else null end)*1.00/count(*)*1.00, 5) as Pct FROM Stats WHERE Date >= "1/1/2016" group by 1 having count(*)> 100 order by 5 desc')
+
+       'SELECT UPPER(Player) as Player, count(case Result when "Winner" then 1 else null end) as Wins, count(case Result when "Loser" then 1 else null end) as Losses, count(*) as Games, round(count(case Result when "Winner" then 1 else null end)*1.00/count(*)*1.00, 5) as Pct FROM Stats WHERE Date >= "2016-01-01" group by 1 having count(*)> 75 order by 5 desc')
     entries = cur.fetchall()
     return render_template('index.html', entries=entries)
 
@@ -81,10 +83,10 @@ def stats_req():
     print end_date
     print games
     sql='''Select * from (SELECT UPPER(Player) as Player,
-     count(case Result when 'Winner' then 1 else null end) as Wins,
-     count(case Result when 'Loser' then 1 else null end) as Losses,
-     count(*) as Games,
-     round(count(case Result when 'Winner' then 1 else null end)*1.00/count(*)*1.00, 5) as Pct
+    count(case Result when 'Winner' then 1 else null end) as Wins,
+    count(case Result when 'Loser' then 1 else null end) as Losses,
+    count(*) as Games,
+    round(count(case Result when 'Winner' then 1 else null end)*1.00/count(*)*1.00, 5) as Pct
     FROM Stats
     WHERE Date between ? and ?
     group by 1)
@@ -93,7 +95,7 @@ def stats_req():
     cur=db.execute (sql, [start_date, end_date, games])
 
     entries=cur.fetchall()
-    return render_template('index.html', scroll='something', entries=entries)
+    return render_template('index.html', scroll='output', entries=entries)
 
 @app.route('/logout')
 def logout():
