@@ -64,7 +64,10 @@ def show_entries():
 
        'SELECT UPPER(Player) as Player, count(case Result when "Winner" then 1 else null end) as Wins, count(case Result when "Loser" then 1 else null end) as Losses, count(*) as Games, round(count(case Result when "Winner" then 1 else null end)*1.00/count(*)*1.00, 5) as Pct FROM Stats WHERE Date >= "2016-01-01" group by 1 having count(*)> 75 order by 5 desc')
     entries = cur.fetchall()
-    return render_template('index.html', entries=entries)
+    cur = db.execute("select max(Date) from stats")
+    loads = cur.fetchall()
+    print loads
+    return render_template('index.html', entries=entries, loads=loads)
 
 
   #  return render_template('index.html')
@@ -93,9 +96,11 @@ def stats_req():
     where Games >= ? order by 5 desc'''
     db=get_db()
     cur=db.execute (sql, [start_date, end_date, games])
-
     entries=cur.fetchall()
-    return render_template('index.html', scroll='output', entries=entries)
+    cur = db.execute("select max(Date) as Load from stats")
+    loads=cur.fetchall()
+    print loads
+    return render_template('index.html', scroll='output', entries=entries, loads=loads)
 
 @app.route('/logout')
 def logout():

@@ -177,13 +177,17 @@ th {
          			 <label>  MIN GAMES PLAYED </label>
 			  		<input type="integer" size=6 name="games" value="{{ request.form['games'] }}" placeholder="e.g. 100" style="background: #fff;  margin-top: 20px; margin-left: 10px; padding: 5px 10px; border: 1px solid #ccc; "></label>
 
-			  		<p>&nbsp;</p>
+						<p>&nbsp;</p>
        				 <dd><input type="submit" class="btn" value='Run the Numbers'>
+						 <p>&nbsp;</p>
+
 		  </div>
       </dl>
     </form>
+{% for load in loads %}<em> DATA AS OF - &nbsp;</em>{{load.Load}}</td></tr>{% endfor %}
 		{% for entry in entries %}
-		<tr><td>{{ entry.Player }}</td>
+		<tr>
+			<td>{{ entry.Player }}</td>
 			<td>{{ entry.Wins }}</td>
 			<td>{{ entry.Losses }}</td>
 			<td>{{ entry.Games }}</td>
