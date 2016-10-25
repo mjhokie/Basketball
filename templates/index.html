@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
- 
+
 <head>
 
 
@@ -12,9 +12,9 @@
 <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
 
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
- 
+
     <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
-    
+
  	<link rel="stylesheet" href="static/css/bootstrap.min.css">
 	<link rel="stylesheet" href="static/css/font-awesome.min.css">
 	<link rel="stylesheet" href="static/css/animate.min.css">
@@ -33,9 +33,9 @@ th {
 }
 </style>
 </head>
- 
+
 <body data-spy="scroll" data-target=".navbar-collapse" data-offset="50">
-	
+
 <!-- preloader section -->
 <div class="preloader">
 	<div class="sk-spinner sk-spinner-circle">
@@ -53,9 +53,9 @@ th {
        <div class="sk-circle12 sk-circle"></div>
     </div>
 </div>
- 
- 
- 
+
+
+
  <!-- navigation section -->
  <section class="navbar navbar-fixed-top custom-navbar" role="navigation">
 	<div class="container">
@@ -76,8 +76,8 @@ th {
 		</div>
 	</div>
 </section>
- 
- 
+
+
  <!-- home section -->
 <section id="home">
 	<div class="container">
@@ -88,10 +88,10 @@ th {
 				<hr>
 			<!--	<a href="#about" class="smoothScroll btn btn-danger">Sign up today</a> -->
 				<a href="#work" class="smoothScroll btn btn-danger">Check the Stats</a>
-		
+
 			</div>
 		</div>
-	</div>		
+	</div>
 </section>
 
 
@@ -110,7 +110,7 @@ th {
 			<div class="col-md-6 col-sm-12 contact-info">
 				<h2 class="heading bold">PLEASE SIGN IN</h2>
 				<p>Enter login and password to see player stats</p>
-				
+
 			</div>
 			<div class="col-md-6 col-sm-12">
 				<form action="#" method="get" class="wow fadeInUp" data-wow-delay="0.6s">
@@ -127,10 +127,10 @@ th {
 			</div>
 		</div>
 	</div>
-</section>        
+</section>
 -->
 
- 
+
     <!-- sign up section-->
 <section id="work">
 	<div class="container">
@@ -184,7 +184,7 @@ th {
 		  </div>
       </dl>
     </form>
-{% for load in loads %}<em> DATA AS OF - &nbsp;</em>{{load.Load}}</td></tr>{% endfor %}
+        {% for load in loads %}<em> DATA AS OF - &nbsp;</em>{{load.Load}}</td></tr>{% endfor %}
 		{% for entry in entries %}
 		<tr>
 			<td>{{ entry.Player }}</td>
@@ -200,7 +200,7 @@ th {
   </ul>
 {% endblock %}
 
-</section>        
+</section>
 
 <div id="output">
 {% if scroll %}
@@ -339,12 +339,12 @@ th {
 			</div>
 		</div>
 	</div>
-</footer>       
-       
-  
- 
+</footer>
+
+
+
 </div>
-    
+
 <script src="static/js/jquery.js"></script>
 <script src="static/js/bootstrap.min.js"></script>
 <script src="static/js/smoothscroll.js"></script>
@@ -393,7 +393,7 @@ $(function() {
     <script src="static/js/custom.js"></script>
     <script src="static/js/stats.js"></script>
 </body>
- 
+
 </html>
 
 
@@ -402,6 +402,6 @@ $(function() {
 <!DOCTYPE html>
 <html>
   <head>
-    
+
   </body>
 </html>

@@ -17,27 +17,29 @@ conb = lite.connect(":memory:")
 cur = con.cursor()
 
 
-base_path = r"/Users/JamieJackson/Documents/Development/Basketball"
-file_path = os.path.join(base_path,'Official Lunch Ball Stats_09_19_16.xlsm')
-winners = pd.read_excel(file_path,'Data',index_col = 0, usecols=[0,1,2])
+#base_path = r"/Users/JamieJackson/Documents/Development/Basketball"
+#base_path = r""
+#file_path = os.path.join(base_path,'Official Lunch Ball Stats_09_19_16.xlsm')
+file_path = 'Official Lunch Ball Stats_10_18_16.xlsm'
+winners = pd.read_excel(file_path,'Data',  skiprows=1, index_col = 0, usecols=[0,1,2])
 
 
-win2 = pd.read_excel(file_path,'Data',index_col = 0, usecols=[0,1,3])
+win2 = pd.read_excel(file_path,'Data', skiprows=1, index_col = 0, usecols=[0,1,3])
 win2['Player 1 ']=win2['Player 2']
 del win2['Player 2']
 winners=winners.append(win2, ignore_index=False)
 
-win3 = pd.read_excel(file_path,'Data',index_col = 0, usecols=[0,1,4])
+win3 = pd.read_excel(file_path,'Data', skiprows=1, index_col = 0, usecols=[0,1,4])
 win3['Player 1 ']=win3['Player 3']
 del win3['Player 3']
 winners=winners.append(win3, ignore_index=False)
 
-win4 = pd.read_excel(file_path,'Data',index_col = 0, usecols=[0,1,5])
+win4 = pd.read_excel(file_path,'Data', skiprows=1, index_col = 0, usecols=[0,1,5])
 win4['Player 1 ']=win4['Player 4']
 del win4['Player 4']
 winners=winners.append(win4, ignore_index=False)
 
-win5 = pd.read_excel(file_path,'Data',index_col = 0, usecols=[0,1,6])
+win5 = pd.read_excel(file_path,'Data', skiprows=1, index_col = 0, usecols=[0,1,6])
 win5['Player 1 ']=win5['Player 5']
 del win5['Player 5']
 winners=winners.append(win5, ignore_index=False)
@@ -49,25 +51,25 @@ winners['Result']="Winner"
 winners['Player']=winners['Player 1 ']
 
 
-losers = pd.read_excel(file_path,'Data',index_col = 0, usecols=[0,1,7])
+losers = pd.read_excel(file_path,'Data', skiprows=1, index_col = 0, usecols=[0,1,7])
 
-loss2 = pd.read_excel(file_path,'Data',index_col = 0, usecols=[0,1,8])
+loss2 = pd.read_excel(file_path,'Data', skiprows=1, index_col = 0, usecols=[0,1,8])
 loss2['P1']=loss2['P2']
 del loss2['P2']
 losers=losers.append(loss2, ignore_index=False)
 
-loss3 = pd.read_excel(file_path,'Data',index_col = 0, usecols=[0,1,9])
+loss3 = pd.read_excel(file_path,'Data', skiprows=1, index_col = 0, usecols=[0,1,9])
 loss3['P1']=loss3['P3']
 del loss3['P3']
 losers=losers.append(loss3, ignore_index=False)
 
 
-loss4 = pd.read_excel(file_path,'Data',index_col = 0, usecols=[0,1,10])
+loss4 = pd.read_excel(file_path,'Data', skiprows=1, index_col = 0, usecols=[0,1,10])
 loss4['P1']=loss4['P4']
 del loss4['P4']
 losers=losers.append(loss4, ignore_index=False)
 
-loss5 = pd.read_excel(file_path,'Data',index_col = 0, usecols=[0,1,11])
+loss5 = pd.read_excel(file_path,'Data', skiprows=1, index_col = 0, usecols=[0,1,11])
 loss5['P1']=loss5['P5']
 del loss5['P5']
 losers=losers.append(loss5, ignore_index=False)
@@ -83,6 +85,8 @@ losers['Player']=losers['P1']
 Stats=winners.append(losers, ignore_index=False)
 
 
+
+
 del Stats['P1']
 del Stats['Player 1 ']
 Stats['Game']=Stats['Game #']
@@ -92,16 +96,19 @@ Stats = Stats.reindex(columns=['Game', 'Player', 'Result'])
 
 Stats.to_csv('test2.csv')
 
-file="/Users/JamieJackson/Documents/Development/Basketball/test2.csv"
-
+#file="/Users/JamieJackson/Documents/Development/Basketball/test2.csv"
+file="test2.csv"
 df2=pd.read_csv(file)
 
-#print df2
+df2['Date'] = df2.Date.str[:10]
+#df2['Date'] = pd.to_datetime(df2['Date'], format="%Y-%m-%d")
+df2.to_csv('test2.csv')
 
 cur.execute("Drop TABLE Stats")
 cur.execute("CREATE TABLE Stats (Date, Player, Game, Result);") # use your column names here
 
-with open('/Users/JamieJackson/Documents/Development/Basketball/test2.csv','rU') as fin: # `with` statement available in 2.5+
+#with open('/Users/JamieJackson/Documents/Development/Basketball/test2.csv','rU') as fin: # `with` statement available in 2.5+
+with open('test2.csv','rU') as fin: # `with` statement available in 2.5+
     # csv.DictReader uses first line in file for column headings by default
     dr = csv.DictReader(fin) # comma is default delimiter
     to_db = [(i['Date'], i['Player'], i['Game'], i['Result']) for i in dr]
